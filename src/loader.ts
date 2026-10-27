@@ -19,6 +19,8 @@ export function UniqPromise<T>(fn: (id: string) => Promise<T>) {
   }
 }
 export function deleteTask(id: string) {
+  // [AI Edit] AI intelligent programming assistant: drop rendered icons that may come from a built-in set with the same prefix
+  dataURLCache = {}
   return delete _tasks[id]
 }
 
@@ -84,7 +86,8 @@ async function migrateCache() {
 export const LoadIconSet = UniqPromise(async (id: string) => {
   await migrateCache()
 
-  let data: IconifyJSON = loadedIconSets[id] || customCollections.value.find(c => c.prefix === id)
+  // [AI Edit] AI intelligent programming assistant: custom collections take priority over built-in/cached ones with the same prefix
+  let data: IconifyJSON = customCollections.value.find(c => c.prefix === id) || loadedIconSets[id]
 
   if (!data) {
     const cached = await loadCache(id)

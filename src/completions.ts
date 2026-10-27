@@ -37,13 +37,22 @@ export function useCompletion() {
       if (!info)
         return aliasCompletion
 
+      // region [AI Edit] AI intelligent programming assistant
+      const delimiter = namespaceMatch[2]
+      const typed = namespaceMatch[3]
+      // Icon items only replace the icon name after the delimiter, keeping `collection + delimiter` as typed
+      const iconRange = new Range(position.line, position.character - typed.length, position.line, position.character)
+      // endregion [AI Edit] AI intelligent programming assistant
+
       return [
         ...aliasCompletion,
         ...info.icons
           .map((i) => {
             const item = new CompletionItem(i, CompletionItemKind.Text)
-            item.detail = `${id}${config.delimiters[0]}${i}`
-            item.range = range
+            // region [AI Edit] AI intelligent programming assistant
+            item.detail = `${id}${delimiter}${i}`
+            item.range = iconRange
+            // endregion [AI Edit] AI intelligent programming assistant
             return item
           }),
       ]
